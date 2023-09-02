@@ -32,6 +32,10 @@ I run the Lambda out of `us-east-1`. Cloudflare's CDN sits in front of it, provi
 
 Finally, for maximum performance, all of my site's files are baked into the Lambda during the build process using a Rust crate (library) called [`include_dir`](https://michael-f-bryan.github.io/include_dir/include_dir/index.html#). This eliminates a round-trip to a database or S3 bucket to fetch the files, and allows me to serve them directly from the Lambda's memory. While this does increase the binary size *slightly*, it's such a small amount that it doesn't matter.
 
-If you like, you can check out the full code on [GitHub](https://github.com/isaac-mcfadyen/personal-site).
+### Cloudflare and AWS Lambda
 
-Until next time!
+One gotcha that I ran into when using AWS Lambda [Function URLs](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html) is that Lambda expects the `Host` header of the request to exactly match the Function URL. This isn't the case when proxying through Cloudflare - Cloudflare sets the `Host` header to your domain, which means Lambda returns a 403 error code.
+
+The way I got around this was to use a Cloudflare [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/) to rewrite the Host header of the incoming request to the URL AWS Lambda expects. However, this feature is only available on the Enterprise plan, so if you're on the Free plan, you'd need to write a Cloudflare Worker to handle this or use AWS' API Gateway instead of Lambda Function URLs.
+
+If you like, you can check out the full code on [GitHub](https://github.com/isaac-mcfadyen/personal-site). Until next time!
