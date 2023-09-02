@@ -1,0 +1,38 @@
+---
+import ProjectCard from "../components/ProjectCard.astro";
+import MainLayout from "../layouts/MainLayout.astro";
+
+const projects = [
+	{
+		name: "This site!",
+		description:
+			"This site is built with Astro and Tailwind CSS. It's fully static, hosted via AWS Lambda, and served via Cloudflare's CDN.",
+		link: "https://github.com/isaac-mcfadyen/personal-site",
+		year: "2023",
+		image: (await import("../assets/projects/this-site.png")).default,
+	},
+];
+---
+
+<MainLayout>
+	<div class="max-w-screen-md mx-auto my-12 flex flex-col px-4">
+		<h1 class="text-4xl font-bold text-center mb-4">Projects</h1>
+		<p class="mb-6 text-lg text-center">
+			Past and current projects that I'm working on.
+		</p>
+
+		<div class="flex flex-wrap gap-4">
+			{
+				projects.map((project) => (
+					<ProjectCard
+						name={project.name}
+						description={project.description}
+						link={project.link}
+						year={project.year}
+						image={project.image}
+					/>
+				))
+			}
+		</div>
+	</div>
+</MainLayout>

@@ -1,0 +1,20 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = "z"  # Optimize for binary size
+lto = true # Link-time optimization, often reduces binary size
+strip = true  # Automatically strip symbols from the binary, reducing size
+
+[dependencies]
+eyre = "0.6.8"
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
+tokio = { version = "1.30.0", features = ["full"] }
+lambda_http = "0.8.1"
+lambda_runtime = "0.8.1"
+include_dir = "0.7.3"
+mime_guess = "2.0.4"
+etag = "4.0.0"

@@ -1,0 +1,36 @@
+---
+import "../styles.css";
+import { ViewTransitions } from "astro:transitions";
+import Header from "../components/Header.astro";
+
+interface Props {
+	header?: boolean;
+}
+let { header = true } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={Astro.url} />
+
+		<!-- OpenGraph -->
+		<meta property="og:title" content="Isaac McFadyen" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/favicon.png" />
+
+		<script
+			defer
+			data-domain="imcf.me"
+			src="https://plausible.imcf.me/js/script.js"></script>
+		<title>Isaac McFadyen</title>
+		<ViewTransitions />
+	</head>
+	<body class="dark:bg-zinc-800 dark:text-zinc-50 bg-zinc-100 text-zinc-900">
+		{header ? <Header /> : null}
+		<slot />
+	</body>
+</html>

@@ -1,0 +1,58 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import TorontoSkyline from "../assets/toronto-skyline.jpg";
+import { getImage } from "astro:assets";
+
+const avifSkyline = await getImage({
+	src: TorontoSkyline,
+	format: "avif",
+	width: 1280,
+});
+const webpSkyline = await getImage({
+	src: TorontoSkyline,
+	format: "webp",
+	width: 1280,
+});
+const jpegSkyline = await getImage({
+	src: TorontoSkyline,
+	format: "jpeg",
+	width: 1280,
+});
+---
+
+<MainLayout>
+	<div class="max-w-screen-sm mx-auto my-12 flex flex-col px-4">
+		<h1 class="text-4xl font-bold text-center mb-4">AS213339</h1>
+		<p class="text-lg py-2">I run my own network, AS213339, out of Toronto.</p>
+		<p class="text-lg py-2">
+			I primarily use it for educational purposes, such as learning about BGP
+			and Wireguard. I have an opening peering policy - just reach out if you
+			want to peer! I'm currently connected via Equinix TR2, on a VM hosted via
+			the amazing <a
+				href="https://xenyth.net/"
+				class="link-blue"
+				rel="noopener"
+				target="_blank">Xenyth Cloud</a
+			>.
+		</p>
+		<p class="text-lg">
+			I'm IPv6 only (thanks to <a
+				href="https://andrewnet.net/"
+				class="link-blue"
+				rel="noopener"
+				target="_blank">andrewnet</a
+			> for loaning me his temporarily!) but I'm working on getting my own IPv6
+			and IPv4 via the ARIN waitlist.
+		</p>
+
+		<picture>
+			<source srcset={avifSkyline.src} type="image/avif" />
+			<source srcset={webpSkyline.src} type="image/webp" />
+			<img
+				src={jpegSkyline.src}
+				alt="Toronto Skyline"
+				class="my-8 rounded-lg shadow-lg"
+			/>
+		</picture>
+	</div>
+</MainLayout>

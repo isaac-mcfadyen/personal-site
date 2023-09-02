@@ -1,0 +1,6 @@
+@tailwind components;
+@layer components {
+	.link-blue {
+		@apply font-bold text-blue-400 dark:text-blue-300 hover:text-blue-600 hover:dark:text-blue-500 visited:text-purple-400 visited:dark:text-purple-300 visited:hover:text-purple-600 visited:hover:dark:text-purple-500 transition;
+	}
+}

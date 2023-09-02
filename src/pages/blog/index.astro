@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import BlogPostCard from "../../components/BlogPostCard.astro";
+
+const posts = await getCollection("blog");
+---
+
+<MainLayout>
+	<div class="max-w-screen-md mx-auto my-12 flex flex-col">
+		<h1 class="text-4xl font-bold text-center mb-4">Blog</h1>
+		<p class="mb-6 text-lg text-center">
+			My blog, where I post miscellaneous stuff about software and tech.
+		</p>
+		{posts.map((post) => <BlogPostCard post={post} />)}
+	</div>
+</MainLayout>

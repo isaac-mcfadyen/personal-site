@@ -1,0 +1,65 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import readingTime from "reading-time";
+
+export const getStaticPaths = (async () => {
+	const posts = await getCollection("blog");
+	return posts.flatMap((post) => {
+		return {
+			params: {
+				slug: post.slug,
+			},
+			props: {
+				post,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	post: CollectionEntry<"blog">;
+}
+const { post } = Astro.props;
+const { Content } = await post.render();
+const time = readingTime(post.body);
+---
+
+<MainLayout>
+	<div
+		class="mt-12 mx-auto rounded-lg w-[600px] h-[300px] max-w-[100vw] flex justify-center items-center shadow-lg dark:bg-zinc-700"
+	>
+		{
+			post.data.emoji != null ? (
+				<span class="text-5xl">{post.data.emoji}</span>
+			) : (
+				""
+			)
+		}
+	</div>
+
+	<div class="max-w-screen-md mx-auto mb-12 flex flex-col px-4">
+		<h1
+			class="mt-8 font-bold text-4xl"
+			transition:name={`blog-post-${post.slug}-title`}
+			transition:animate="none"
+		>
+			{post.data.title}
+		</h1>
+		<span
+			class="mt-1"
+			transition:name={`blog-post-${post.slug}-date`}
+			transition:animate="none">Published {post.data.date}</span
+		>
+		<span
+			class="text-blue-400 dark:text-blue-200 font-bold"
+			transition:name={`blog-post-${post.slug}-time`}
+			transition:animate="none">{time.text}</span
+		>
+
+		<div class="prose dark:prose-invert mt-4">
+			<Content />
+		</div>
+	</div>
+</MainLayout>
