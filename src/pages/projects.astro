@@ -11,17 +11,25 @@ const projects = [
 		year: "2023",
 		image: (await import("../assets/projects/this-site.png")).default,
 	},
+	{
+		name: "D1 Console",
+		description:
+			"A REPL and query console for Cloudflare's D1 product, made with TypeScript and Commander.js.",
+		link: "https://github.com/isaac-mcfadyen/d1-console",
+		year: "2021",
+		image: (await import("../assets/projects/d1-console.png")).default,
+	},
 ];
 ---
 
 <MainLayout>
-	<div class="max-w-screen-md mx-auto my-12 flex flex-col px-4">
+	<div class="max-w-screen-lg mx-auto my-12 flex flex-col px-4">
 		<h1 class="text-4xl font-bold text-center mb-4">Projects</h1>
 		<p class="mb-6 text-lg text-center">
 			Past and current projects that I'm working on.
 		</p>
 
-		<div class="flex flex-wrap gap-4">
+		<div class="flex justify-center flex-wrap gap-4">
 			{
 				projects.map((project) => (
 					<ProjectCard
