@@ -26,7 +26,7 @@ const { Content } = await post.render();
 const time = readingTime(post.body);
 ---
 
-<MainLayout>
+<MainLayout title={`${post.data.title} | Isaac McFadyen`}>
 	<div class="max-w-screen-md mx-auto mb-12 mt-12 flex flex-col px-4">
 		<a
 			href="/blog"

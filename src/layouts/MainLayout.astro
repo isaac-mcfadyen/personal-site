@@ -5,8 +5,10 @@ import Header from "../components/Header.astro";
 
 interface Props {
 	header?: boolean;
+	title?: string;
+	description?: string;
 }
-let { header = true } = Astro.props;
+let { header = true, title = "Isaac McFadyen", description } = Astro.props;
 ---
 
 <html lang="en">
@@ -22,11 +24,16 @@ let { header = true } = Astro.props;
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="/favicon.png" />
 
+		<!-- Plausible analytics: privacy preserving Google alternative -->
+		<!-- Feel free to block them if you want :) -->
 		<script
 			defer
 			data-domain="imcf.me"
 			src="https://plausible.imcf.me/js/script.js"></script>
-		<title>Isaac McFadyen</title>
+
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+
 		<ViewTransitions />
 	</head>
 	<body class="dark:bg-zinc-800 dark:text-zinc-50 bg-zinc-100 text-zinc-900">

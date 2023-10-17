@@ -6,7 +6,10 @@ import BlogPostCard from "../../components/BlogPostCard.astro";
 const posts = await getCollection("blog");
 ---
 
-<MainLayout>
+<MainLayout
+	title="Blog | Isaac McFadyen"
+	description="Some blog posts I've collected over time, about random things. You might find some interesting!"
+>
 	<div class="max-w-screen-md mx-auto my-12 flex flex-col">
 		<h1 class="text-4xl font-bold text-center mb-4">Blog</h1>
 		<p class="mb-6 text-lg text-center">
