@@ -1,6 +1,5 @@
 ---
 title: "This site: design and hosting"
-emoji: "🚀"
 date: "2023-09-02"
 ---
 
@@ -16,26 +15,14 @@ My site is all static. Static sites can be significantly faster than server-side
 
 I use [TailwindCSS](https://tailwindcss.com/) and Tailwind's Typography feature for styling. If you haven't used it before, Tailwind is like Bootstrap but without the opinionated design. It allows specifying CSS attributes completely with classes, while still allowing fine-grained adjustment of styling and layout.
 
+I also use Astro's new [View Transitions](https://docs.astro.build/en/guides/view-transitions/). Astro View Transitions builds on the work being done in Chrome (and eventually Safari and Mozilla, or at least they've indicated support) with the [View Transitions API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API) to allow page transitions to be animated and super smooth, even between completely seperate pages on a site - something that would be very difficult to do without native browser support. Check it out by going home and then back to my blog.
+
 ### Hosting
 
-I thought about hosting this website through a service like Vercel, but decided against it. Vercel's pricing is quite expensive, and goes up very quickly the more bandwidth you consume. While they do have a free plan, I didn't want to risk overages or consuming too many build minutes.
+I host this site via [Cloudflare Pages](https://pages.cloudflare.com). Cloudflare Pages is completely free for static sites (unlimited bandwidth, unlimited requests!), supports server-side rendered sites with cheap pricing, and has built-in CI/CD.
 
-Another alternative is Cloudflare Pages. Cloudflare Pages is completely free for static sites (unlimited bandwidth, unlimited requests!), supports server-side rendered sites with cheap pricing, and has built-in CI/CD. However, I wanted full customization of everything, and Cloudflare Pages can be opinionated at times. If you use a framework like Next.JS, or just want a site set up quickly and cheaply, I'd recommend [you check it out](https://pages.cloudflare.com) though.
+In this case, I'm actually using [Direct Uploads](https://developers.cloudflare.com/pages/platform/direct-upload/) to allow me to skip the CI/CD step and upload my content quickly - while useful when working in a team, Direct Uploads allows me to iterate on blog posts and publish them instantly around the world.
 
-Instead of a service like Vercel or Cloudflare, this site runs on... AWS Lambda! (cue the exclamations of shock)
-
-Lambda is known for so-called "cold starts", where a container/VM/whatever AWS is using these days must be spun up from scratch when no requests have been seen for a while. However, I mitigate this with Rust.
-
-Rust is known for it's speed, memory efficiency, and safety, although it is a tricky language to learn. In the cast of Lambda, Rust can cut a 500ms cold-start time down to a [20ms cold start time](https://maxday.github.io/lambda-perf/)! If you've used Lambda before, you know how remarkable this is.
-
-I run the Lambda out of `us-east-1`. Cloudflare's CDN sits in front of it, providing caching, DDoS protection, and automatic TLS for my domain. Some dynamic portions of this site, like the contact form, are written in Rust, but otherwise the Lambda function mostly just serves static files.
-
-Finally, for maximum performance, all of my site's files are baked into the Lambda during the build process using a Rust crate (library) called [`include_dir`](https://michael-f-bryan.github.io/include_dir/include_dir/index.html#). This eliminates a round-trip to a database or S3 bucket to fetch the files, and allows me to serve them directly from the Lambda's memory. While this does increase the binary size *slightly*, it's such a small amount that it doesn't matter.
-
-### Cloudflare and AWS Lambda
-
-One gotcha that I ran into when using AWS Lambda [Function URLs](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html) is that Lambda expects the `Host` header of the request to exactly match the Function URL. This isn't the case when proxying through Cloudflare - Cloudflare sets the `Host` header to your domain, which means Lambda returns a 403 error code.
-
-The way I got around this was to use a Cloudflare [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/) to rewrite the Host header of the incoming request to the URL AWS Lambda expects. However, this feature is only available on the Enterprise plan, so if you're on the Free plan, you'd need to write a Cloudflare Worker to handle this or use AWS' API Gateway instead of Lambda Function URLs.
+I'm also not using a server-side rendering adapter. As mentioned previously, this blog is completely static. However, I am using [Pages Functions](https://developers.cloudflare.com/pages/platform/functions/) to provide the contact form. Thanks to some configuration ([_routes.json](https://developers.cloudflare.com/pages/platform/functions/routing/#create-a-_routesjson-file)), I'm not billed for static asset requests, only the few contact submissions I get.
 
 If you like, you can check out the full code on [GitHub](https://github.com/isaac-mcfadyen/personal-site). Until next time!

@@ -27,19 +27,25 @@ const time = readingTime(post.body);
 ---
 
 <MainLayout>
-	<div
-		class="mt-12 mx-auto rounded-lg w-[600px] h-[300px] max-w-[100vw] flex justify-center items-center shadow-lg dark:bg-zinc-700"
-	>
-		{
-			post.data.emoji != null ? (
-				<span class="text-5xl">{post.data.emoji}</span>
-			) : (
-				""
-			)
-		}
-	</div>
-
-	<div class="max-w-screen-md mx-auto mb-12 flex flex-col px-4">
+	<div class="max-w-screen-md mx-auto mb-12 mt-12 flex flex-col px-4">
+		<a
+			href="/blog"
+			class="mr-auto flex gap-2 justify-center items-center align-middle link-blue"
+			><svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-4 h-4"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+			</svg>
+			<span>Back</span>
+		</a>
 		<h1
 			class="mt-8 font-bold text-4xl"
 			transition:name={`blog-post-${post.slug}-title`}
@@ -47,14 +53,11 @@ const time = readingTime(post.body);
 		>
 			{post.data.title}
 		</h1>
-		<span
-			class="mt-1"
-			transition:name={`blog-post-${post.slug}-date`}
-			transition:animate="none">Published {post.data.date}</span
+		<span class="mt-1" transition:animate="none"
+			>Published {post.data.date}</span
 		>
 		<span
 			class="text-blue-400 dark:text-blue-200 font-bold"
-			transition:name={`blog-post-${post.slug}-time`}
 			transition:animate="none">{time.text}</span
 		>
 
