@@ -20,6 +20,7 @@
 		<label for="name" class="font-bold mb-1 text-sm">Name</label>
 		<input
 			required
+			id="name"
 			type="text"
 			name="name"
 			placeholder="Name"
@@ -31,6 +32,7 @@
 		<label for="email" class="font-bold mb-1 text-sm">Email</label>
 		<input
 			required
+			id="email"
 			type="email"
 			name="email"
 			placeholder="Email"
@@ -42,6 +44,7 @@
 		<label for="message" class="font-bold mb-1 text-sm">Message</label>
 		<textarea
 			required
+			id="message"
 			name="message"
 			placeholder="Message"
 			class="w-full p-1 px-3 border border-gray-600 bg-gray-700 rounded shadow-inner"
