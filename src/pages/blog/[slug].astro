@@ -26,7 +26,10 @@ const { Content } = await post.render();
 const time = readingTime(post.body);
 ---
 
-<MainLayout title={`${post.data.title} | Isaac McFadyen`}>
+<MainLayout
+	title={`${post.data.title} | Isaac McFadyen`}
+	description={post.data.description}
+>
 	<div class="max-w-screen-md mx-auto mb-12 mt-12 flex flex-col px-4">
 		<a
 			href="/blog"
