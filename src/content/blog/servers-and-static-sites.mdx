@@ -1,0 +1,25 @@
+---
+title: "Servers and static sites: why??"
+date: "2023-11-10"
+description: "A small rant about servers and static sites, and some recommendations if your site is completely static."
+---
+
+Recently I've seen a *surprising* number of websites that are static yet hosted on a dedicated server, or a VPS, or something similar. I'm not sure why this is, but I thought I'd write a small post about why I think this is a bad idea, and what you should do instead. 😅
+
+TLDR: **If your site is completely static, you should use a static site host.**
+
+### The issue
+
+Nothing's wrong with a static site! Static sites are great.
+
+But they're ***static***. They don't run a backend, there's no PHP or Express server, and they don't need a database. They're just HTML, CSS, and JS, often using a framework like React or SvelteKit or Astro. They're fast and they're cheap.
+
+Dedicated servers or VPSes are great for running dynamic sites. But you don't need to use them for hosting a static site! They're way overkill: they're expensive for the service they're providing and are vulnerable to DDoS attacks or even a spike of high traffic.
+
+### The solution
+
+There are many static site hosts out there that manage things completely for you ([Vercel](https://vercel.com), [Netlify](https://netlify.com), [Cloudflare Pages](https://pages.cloudflare.com), and [GitHub Pages](https://pages.github.com/) to name a few), and they're all free for small sites. Even at higher scales, they can be significantly cheaper than running a server.
+
+If you want even more control, you can use something like AWS's S3 & Cloudfront, or GCP's GCS & Cloud CDN, or Azure's Blob Storage & Front Door, all of which allow you to specify the exact region your site runs in and configure cache behavior exactly the way you want. These are all great options, and they're all significantly cheaper than running a server!
+
+For example, I run a moderate traffic website for *$0.50 a month*, including bandwidth and requests. Even this website is running on Cloudflare Pages completely for free (see my [previous post](/blog/this-site) for details! 😊).
