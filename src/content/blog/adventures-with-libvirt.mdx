@@ -60,13 +60,13 @@ At any time during the process, if you have an issue you can reboot and everythi
 </Aside>
 
 My script for this is below.
-- You'll need to replace `VMNAME` with your VM name, and `PCI_ID` with the first couple digits of the PCI ID of your GPU. You can find it with `lspci -nn | grep -i nvidia`. For example, mine is `2d:00.0` so I use `2d` as the PCI ID.
+- You'll need to replace `VM_NAME` with your VM name, and `PCI_ID` with the first couple digits of the PCI ID of your GPU. You can find it with `lspci -nn | grep -i nvidia`. For example, mine is `2d:00.0` so I use `2d` as the PCI ID.
 - You'll also need to figure out which number your framebuffer is on. Mine was `vtcon1`, but yours might be different. You can check with `cat /sys/class/vtconsole/vtcon1/name` and see if it says "frame buffer". If not, try `vtcon0`, `vtcon2`, etc. until you find the right one.
 
 ```bash
 #!/bin/bash
 
-VMNAME="win11"
+VM_NAME="win11"
 PCI_ID="2d"
 
 # Only allow running as root. This is so we don't have to "sudo" everything.
@@ -106,7 +106,7 @@ virsh nodedev-detach pci_0000_${PCI_ID}_00_3
 # Start the VM!
 sleep 3
 echo "Starting VM..."
-virsh start $VMNAME
+virsh start $VM_NAME
 ```
 
 ## GPU un-passthrough (VM shutdown)
@@ -123,12 +123,12 @@ The steps above are pretty much done in reverse order for VM shutdown. I'll deta
     If you're using LXD, you'll need to reset your GPU between the step of rebinding the framebuffer and reenabling Persistence Mode, otherwise the GPU will say it's active but your display manager will crash. As far as I can tell this physically power-cycles your GPU but I'm not sure. Run `echo "1" | sudo tee /sys/bus/pci/drivers/nvidia/${ID}/reset` (with your GPU's PCI ID, found via `lspci -nn | grep -i nvidia`) to do that. I found I didn't need to with `libvirt`.
 </Aside>
 
-Alright, my script is below. Same deal - replace `VMNAME` with your VM name, and `PCI_ID` with the first couple digits of the PCI ID of your GPU, and check your framebuffer number to make sure you bind the right one.
+Alright, my script is below. Same deal - replace `VM_NAME` with your VM name, and `PCI_ID` with the first couple digits of the PCI ID of your GPU, and check your framebuffer number to make sure you bind the right one.
 
 ```bash
 #!/bin/bash
 
-VMNAME="win11"
+VM_NAME="win11"
 PCI_ID="2d"
 
 # Only allow running as root. This is so we don't have to "sudo" everything.
@@ -140,7 +140,7 @@ fi
 
 # Shut down the VM. It's an asynchrous operation so we need to wait for it to complete too.
 echo "Stopping VM..."
-virsh shutdown $VMNAME
+virsh shutdown $VM_NAME
 until sudo virsh domstate win11 | grep "shut off"; do
     echo "Waiting for shutdown..."
     sleep 3
@@ -166,7 +166,7 @@ echo "1" > /sys/class/vtconsole/vtcon1/bind
 # For LXD! Don't uncomment if you're on libvirt.
 # sleep 3
 # echo "Resetting GPU..."
-# echo "1" > /sys/bus/pci/drivers/nvidia/0000:2d:00.0/reset
+# echo "1" > /sys/bus/pci/drivers/nvidia/0000:${PCI_ID}:00.0/reset
 
 # Enable NVIDIA Persistence Daemon.
 echo "Enabling NVIDIA Persistence Daemon..."
