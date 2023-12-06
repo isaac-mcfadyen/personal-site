@@ -1,0 +1,36 @@
+---
+type Props = {
+	type: "note" | "warning" | "error";
+	title?: string;
+};
+let { type = "note", title } = Astro.props;
+if (title == null) {
+	title = type.charAt(0).toUpperCase() + type.slice(1);
+}
+---
+
+<div
+	class={`w-full rounded-sm pt-6 pb-2 px-6 border-l-4 flex flex-col justify-start items-start ${
+		type == "note"
+			? "bg-blue-600/50 border-blue-400"
+			: type == "warning"
+			? "bg-yellow-600/50 border-yellow-400"
+			: "bg-red-600/50 border-red-400"
+	}`}
+>
+	<div class="flex justify-center items-center -mb-1">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			class="w-6 h-6 mr-2"
+		>
+			<path
+				fill-rule="evenodd"
+				d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+				clip-rule="evenodd"></path>
+		</svg>
+		<span class="font-bold">{title}</span>
+	</div>
+	<slot />
+</div>

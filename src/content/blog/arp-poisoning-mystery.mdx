@@ -1,0 +1,47 @@
+---
+title: "The mysterious case of the (ARP) poisoning"
+date: "2023-12-06"
+description: "One winters night, there was a (networking) mystery afoot..."
+---
+import ThemeSong from "../../assets/blog/arp-poisoning-mystery/pink-panther-theme.mp3"
+
+***Cue the theme music!***
+<audio controls>
+  <source src={ThemeSong} type="audio/mpeg" />
+</audio>
+
+One winters night, I had just finished setting up a VM, and everything was fine... or so I thought.
+
+## Background
+
+OK, so some backstory first. I run Ubiquiti Unifi devices at home (access points, switches), but my own Unifi controller. They're wonderful and I couldn't recommend them more.
+
+About a week previously, I had changed my Unifi password. The issue was, at the time I changed my password, some switches were disconnected. When they tried to reconnect to the controller, the controller tried to authenticate back with the new password (which failed) and so they didn't reconnect.
+
+## The issue
+
+Fast forward a week later, and I'm configuring a VM on my desktop. While doing unrelated tasks, I notice the switch isn't connected. No problem, I'll just reconnect it. Because it's a Flex Mini (micro-sized gigabit switch), there's no SSH access like the rest of the Unifi lineup - to reconnect it, you need to factory reset it.
+
+I hit the reset button, switch reboots, all is fine.
+
+About an hour later, the VM on my desktop suddenly loses internet connectivity. But it's a *weird issue*. I can ping other devices on my LAN, I can ping the host computer (which is on the same Linux bridge). But I can't ping the router, and I can't ping the internet. **Usually**. 1 in 100 pings go through. Super weird.
+
+So I spend a few hours trying to debug it, to no avail. I switch the type of adapter on the VM thinking that might be it. I reset the Linux bridge. I completely flush all `iptables` rules. I do a couple reboots. No result.
+
+Just when I'm about to head to bed, I run one last `tcpdump`. ARP reply from `10.32.0.1` at `00:1f:54:68:1a:b5`, ARP reply from `10.32.0.1` at `84:a1:d1:5c:7f:30`, nothing out of the ordinary.
+
+***Wait***. Two different MAC addresses for the same IP? And the second one is most certainly not my router. It's some odd Broadcom device, which looks... oddly familiar.
+
+I spend a few minutes with Wireshark trying to trace things down, and discover that the `84:` device is literally replying to *every* ARP request with it's own MAC address. And it's on a separate subnet, meaning devices are trying to connect to the regular router, having their ARP cache hijacked, and then trying to connect to the `84:` device instead - which fails because it's on a separate subnet.
+
+## The solution
+
+After more investigation, I finally figured it out. It's the Bell Canada modem that I run in bypass mode because I use my own PPPoE config (still via Bell, still paid internet, but with my own router). And it's ARP poisoning everything because it wants the user to log in and restore its own PPPoE access.
+
+I *had* a VLAN set up to isolate it from the rest of the network and prevent this exact scenario. But I had reset the switch, and the VLAN was gone. When the (newly reset) switch attempted to connect back to my Unifi controller and get its VLAN config, it was poisoned itself and couldn't connect, leaving the modem completely unisolated.
+
+I disconnected the modem, reset the switch, added the VLAN back, and reconnected and now everything is fine. But it just goes to show that sometimes the most obvious solution (the VM being misconfigured) is the right one... and sometimes not. 😅
+
+(side note: if you want to check out the lessons I've learned running Windows 11 in `libvirt`, see [here](/blog/adventures-with-libvirt))
+
+Thanks for reading!

@@ -7,23 +7,25 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "export $(cat .env | xargs); wrangler pages dev --proxy 4321 --binding CONTACT_WEBHOOK_URL=$CONTACT_WEBHOOK_URL --binding TURNSTILE_SECRET_KEY=$TURNSTILE_SECRET_KEY -- astro dev",
-		"deploy": "astro build; wrangler pages publish ./dist",
+		"deploy:prod": "astro build; wrangler pages publish ./dist",
+		"deploy:dev": "astro build; wrangler pages publish --branch preview ./dist",
 		"astro": "astro"
 	},
 	"devDependencies": {
-		"@astrojs/prefetch": "^0.4.1",
 		"@astrojs/sitemap": "^3.0.3",
-		"@astrojs/svelte": "^4.0.3",
-		"@astrojs/tailwind": "^5.0.2",
+		"@astrojs/svelte": "^5.0.0",
+		"@astrojs/tailwind": "^5.0.3",
 		"@cloudflare/workers-types": "^4.20231025.0",
 		"@tailwindcss/typography": "^0.5.10",
-		"astro": "^3.5.2",
+		"astro": "^4.0.2",
 		"reading-time": "^1.5.0",
-		"sharp": "^0.32.6",
-		"svelte": "^4.2.3",
-		"tailwindcss": "^3.3.5"
+		"sharp": "^0.33.0",
+		"svelte": "^4.2.8",
+		"tailwindcss": "^3.3.6",
+		"wrangler": "^2"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "^1.1.4"
+		"@astrojs/mdx": "^2.0.0",
+		"astro-expressive-code": "^0.29.3"
 	}
 }
