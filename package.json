@@ -13,19 +13,19 @@
 	},
 	"devDependencies": {
 		"@astrojs/sitemap": "^3.0.3",
-		"@astrojs/svelte": "^5.0.0",
+		"@astrojs/svelte": "^5.0.1",
 		"@astrojs/tailwind": "^5.0.3",
-		"@cloudflare/workers-types": "^4.20231025.0",
+		"@cloudflare/workers-types": "^4.20231218.0",
 		"@tailwindcss/typography": "^0.5.10",
-		"astro": "^4.0.2",
+		"astro": "^4.0.6",
 		"reading-time": "^1.5.0",
-		"sharp": "^0.33.0",
+		"sharp": "^0.33.1",
 		"svelte": "^4.2.8",
-		"tailwindcss": "^3.3.6",
-		"wrangler": "^2"
+		"tailwindcss": "^3.4.0",
+		"wrangler": "^2.20.2"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "^2.0.0",
-		"astro-expressive-code": "^0.29.3"
+		"@astrojs/mdx": "^2.0.1",
+		"astro-expressive-code": "^0.30.1"
 	}
 }
