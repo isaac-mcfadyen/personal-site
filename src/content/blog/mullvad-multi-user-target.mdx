@@ -1,0 +1,27 @@
+---
+title: "Mullvad VPN and multi-user.target"
+date: "2024-01-29"
+description: "Some issues and a workaround for multi-user.target and Mullvad VPN."
+---
+
+I've been using Mullvad VPN for a couple years now. It's by far and away the best VPN I've used. It's reliable, decently fast, and has pretty fair pricing (and transparency!).
+
+Today I ran into an issue with Mullvad on Linux and I thought I'd detail the issue and solution I found in case anyone else ever runs into it.
+
+I commonly use `multi-user.target` when I want to reduce the load on my GPU as much as possible, either for [libvirt GPU Passthrough](/blog/adventures-with-libvirt) or just to reduce VRAM usage. _Normally_ it's a pretty simple process:
+
+```bash
+sudo systemctl isolate multi-user.target
+```
+
+However, I tried it today and my networking suddenly died with `Operation not permitted` on everything that tried to access it, even with `sudo`. I spent a good 30 minutes trying to figure out what was going on, including messing with `netplan` and destroying/recreating my network interfaces. I finally discovered it was Mullvad VPN.
+
+It seems they have a `mullvad-early-boot-blocker.service` that runs at boot. As far as I can tell, this service blocks all network access until the `mullvad-daemon.service` starts, mainly for people that need to tunnel all traffic via Mullvad at all costs. This is great... but it also seems to activate when you switch to `multi-user.target` and doesn't unblock things when you switch back to `graphical.target`.
+
+Assuming you don't care about blocking all network access until Mullvad starts, you can just disable the service:
+
+```bash
+sudo systemctl disable mullvad-early-boot-blocker.service
+```
+
+And voila! Networking in `multi-user.target` works again.
