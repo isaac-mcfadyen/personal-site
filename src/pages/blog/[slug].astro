@@ -3,13 +3,14 @@ import type { GetStaticPaths } from "astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 import readingTime from "reading-time";
+import { render } from "astro:content";
 
 export const getStaticPaths = (async () => {
 	const posts = await getCollection("blog");
 	return posts.flatMap((post) => {
 		return {
 			params: {
-				slug: post.slug,
+				slug: post.id,
 			},
 			props: {
 				post,
@@ -22,8 +23,8 @@ interface Props {
 	post: CollectionEntry<"blog">;
 }
 const { post } = Astro.props;
-const { Content } = await post.render();
-const time = readingTime(post.body);
+const { Content } = await render(post);
+const time = readingTime(post.body ?? "");
 ---
 
 <MainLayout
@@ -49,28 +50,19 @@ const time = readingTime(post.body);
 			</svg>
 			<span>Back</span>
 		</a>
-		<h1
-			class="mt-8 font-bold text-4xl"
-			transition:name={`blog-post-${post.slug}-title`}
-			transition:animate="none"
-		>
+		<h1 class="mt-8 font-bold text-4xl">
 			{post.data.title}
 		</h1>
-		<span class="mt-1" transition:animate="none"
-			>Published {post.data.date}</span
-		>
-		<span
-			class="text-blue-400 dark:text-blue-200 font-bold"
-			transition:animate="none">{time.text}</span
-		>
-
+		<span class="mt-1">Published {post.data.date}</span>
+		<span class="text-blue-400 dark:text-blue-200 font-bold">{time.text}</span>
 		<div class="prose dark:prose-invert mt-4 mb-24">
 			<Content />
 		</div>
 	</div>
 </MainLayout>
 
-<style>
+<style lang="postcss">
+	@reference "../../styles.css";
 	:global(img) {
 		@apply rounded-lg shadow border border-gray-200 dark:border-gray-700;
 	}

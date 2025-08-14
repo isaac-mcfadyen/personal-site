@@ -49,15 +49,15 @@
 			placeholder="Message"
 			class="w-full p-1 px-3 border border-gray-600 bg-gray-700 rounded shadow-inner"
 			rows="3"
-		/>
+		></textarea>
 	</div>
 
-	<!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAAADUKutzeZvRXR2o" />
+	<div class="cf-turnstile" data-sitekey="0x4AAAAAAADUKutzeZvRXR2o"></div>
 	<script
 		src="https://challenges.cloudflare.com/turnstile/v0/api.js"
 		async
 		defer
-	></script> -->
+	></script>
 
 	<button
 		class="ml-auto bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"

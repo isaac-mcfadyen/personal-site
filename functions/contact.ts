@@ -11,7 +11,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 	try {
 		formData = await context.request.formData();
 	} catch (e) {
-		// Redirect back to /contact with a GET method (303 See Other forces this).
 		return new Response("Redirecting to /contact", {
 			status: 303,
 			headers: {
@@ -23,14 +22,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 	const name = formData.get("name");
 	const email = formData.get("email");
 	const message = formData.get("message");
-	// const turnstileResponse = formData.get("cf-turnstile-response");
+	const turnstileResponse = formData.get("cf-turnstile-response");
 	if (
 		name == null ||
 		email == null ||
-		message == null
-		// turnstileResponse == null
+		message == null ||
+		turnstileResponse == null
 	) {
-		// Redirect back to /contact with a GET method (303 See Other forces this).
 		return new Response("Redirecting to /contact", {
 			status: 303,
 			headers: {
@@ -41,35 +39,34 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 	const nameValue = name.toString();
 	const emailValue = email.toString();
 	const messageValue = message.toString();
-	// const turnstileResponseValue = turnstileResponse.toString();
+	const turnstileResponseValue = turnstileResponse.toString();
 
-	// // Validate with Turnstile.
-	// let turnstileFormData = new FormData();
-	// turnstileFormData.append("secret", context.env.TURNSTILE_SECRET_KEY);
-	// turnstileFormData.append("response", turnstileResponseValue);
-	// const turnstileValidationReply = await fetch(
-	// 	"https://challenges.cloudflare.com/turnstile/v0/siteverify",
-	// 	{
-	// 		method: "POST",
-	// 		headers: {
-	// 			"Content-Type": "application/json",
-	// 		},
-	// 		body: JSON.stringify({
-	// 			secret: context.env.TURNSTILE_SECRET_KEY,
-	// 			response: turnstileResponseValue,
-	// 		}),
-	// 	}
-	// );
-	// const turnstileOutcome: any = await turnstileValidationReply.json();
-	// if (!turnstileOutcome.success) {
-	// 	// Redirect back to /contact with a GET method (303 See Other forces this).
-	// 	return new Response("Redirecting to /contact", {
-	// 		status: 303,
-	// 		headers: {
-	// 			Location: "/contact?success=false",
-	// 		},
-	// 	});
-	// }
+	// Validate with Turnstile.
+	let turnstileFormData = new FormData();
+	turnstileFormData.append("secret", context.env.TURNSTILE_SECRET_KEY);
+	turnstileFormData.append("response", turnstileResponseValue);
+	const turnstileValidationReply = await fetch(
+		"https://challenges.cloudflare.com/turnstile/v0/siteverify",
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				secret: context.env.TURNSTILE_SECRET_KEY,
+				response: turnstileResponseValue,
+			}),
+		}
+	);
+	const turnstileOutcome: any = await turnstileValidationReply.json();
+	if (!turnstileOutcome.success) {
+		return new Response("Redirecting to /contact", {
+			status: 303,
+			headers: {
+				Location: "/contact?success=false",
+			},
+		});
+	}
 
 	try {
 		const dateSent = new Date();
@@ -95,7 +92,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 		});
 		if (!reply.ok) {
 			console.log("Discord response was not OK: " + (await reply.text()));
-			// Redirect back to /contact with a GET method (303 See Other forces this).
 			return new Response("Redirecting to /contact", {
 				status: 303,
 				headers: {
@@ -105,7 +101,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 		}
 	} catch (e) {
 		console.error(e);
-		// Redirect back to /contact with a GET method (303 See Other forces this).
 		return new Response("Redirecting to /contact", {
 			status: 303,
 			headers: {
@@ -114,7 +109,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 		});
 	}
 
-	// Redirect back to /contact with a GET method (303 See Other forces this).
 	return new Response("Redirecting to /contact", {
 		status: 303,
 		headers: {
